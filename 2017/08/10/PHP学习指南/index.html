@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <link rel="dns-prefetch" href="//vdemo.qiniudn.com">
+  <link rel="dns-prefetch" href="//user-images.githubusercontent.com">
+  
+  <title>PHP学习指南 | VincentHou</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="collection,backend,php,">
+  
+
+  <meta name="description" content="基础入门书籍和文档 PHP The Rright Way: http://laravel-china.github.io/php-the-right-way/ Modern PHP(中文版): https://book.douban.com/subject/26635862/ PHP和MySQL Web开发(原书第4版): https://book.douban.com/subject/35494">
+<meta name="keywords" content="collection,backend,php">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP学习指南">
+<meta property="og:url" content="https://vincenthou.github.io/2017/08/10/PHP学习指南/index.html">
+<meta property="og:site_name" content="VincentHou">
+<meta property="og:description" content="基础入门书籍和文档 PHP The Rright Way: http://laravel-china.github.io/php-the-right-way/ Modern PHP(中文版): https://book.douban.com/subject/26635862/ PHP和MySQL Web开发(原书第4版): https://book.douban.com/subject/35494">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-04-18T12:59:05.439Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PHP学习指南">
+<meta name="twitter:description" content="基础入门书籍和文档 PHP The Rright Way: http://laravel-china.github.io/php-the-right-way/ Modern PHP(中文版): https://book.douban.com/subject/26635862/ PHP和MySQL Web开发(原书第4版): https://book.douban.com/subject/35494">
+
+  
+
+  
+    <link rel="icon" href="//assets-cdn.github.com/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-39656503-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?1e5d8068abdfb22e27ebe052a4feae14";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">更多</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">更多</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基础入门"><span class="toc-text">基础入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#书籍和文档"><span class="toc-text">书籍和文档</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拓展知识"><span class="toc-text">拓展知识</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#周边工具"><span class="toc-text">周边工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#能力目标"><span class="toc-text">能力目标</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#进阶开发"><span class="toc-text">进阶开发</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#书籍和文档-1"><span class="toc-text">书籍和文档</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#能力目标-1"><span class="toc-text">能力目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#拓展知识-1"><span class="toc-text">拓展知识</span></a></li></ol></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-PHP学习指南" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">PHP学习指南</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.08.10</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Vincent Hou</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://vincenthou.github.io/2017/08/10/PHP学习指南/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="基础入门"><a href="#基础入门" class="headerlink" title="基础入门"></a>基础入门</h1><h2 id="书籍和文档"><a href="#书籍和文档" class="headerlink" title="书籍和文档"></a>书籍和文档</h2><ul>
+<li><strong>PHP The Rright Way:</strong> <a href="http://laravel-china.github.io/php-the-right-way/" target="_blank" rel="noopener">http://laravel-china.github.io/php-the-right-way/</a></li>
+<li><strong>Modern PHP(中文版):</strong> <a href="https://book.douban.com/subject/26635862/" target="_blank" rel="noopener">https://book.douban.com/subject/26635862/</a></li>
+<li><strong>PHP和MySQL Web开发(原书第4版):</strong> <a href="https://book.douban.com/subject/3549421/" target="_blank" rel="noopener">https://book.douban.com/subject/3549421/</a></li>
+</ul>
+<p>上面的书籍根据精力逐步学习，<strong>如果能不看视频教程学习，就不要跟随网上的视频教程学习</strong></p>
+<p><strong>Tip:</strong> 强调一点，实际工作中书的作用是<strong>致用</strong>，不是用来考试的，不要在乎一城一地的得失，观其大略，一时看不懂就跳过，掌握知识体系和思维脉络，多动手实践，在实践中再反复的回来看书指导实践，如此迭代</p>
+<h2 id="拓展知识"><a href="#拓展知识" class="headerlink" title="拓展知识"></a>拓展知识</h2><ul>
+<li>作为通用技能的SQL使用就不在这里写出，主要是SQL语法本身还是特定关系型数据库，一般PHP跟MySQL结合更加紧密（随便找本入门的书籍熟悉基本使用就可以）．</li>
+<li>PHP的web程序都是在特定的web容器中运行，最早常用的是apache（很多较早的项目还会使用），现在更常用的是<a href="http://nginx.org/" target="_blank" rel="noopener">nginx</a>，在网上找个基本的文章先了解基本的使用和简单的配置就可以了．</li>
+<li>学习使用Linux的shell命令，使用命令速查命令行工具<a href="https://github.com/tldr-pages/tldr" target="_blank" rel="noopener">TLDR</a>，边用边学，不会了就现查一下</li>
+<li>开阔下视野，看下PHP社区的全貌: <a href="https://github.com/ziadoz/awesome-php" target="_blank" rel="noopener">https://github.com/ziadoz/awesome-php</a></li>
+</ul>
+<h2 id="周边工具"><a href="#周边工具" class="headerlink" title="周边工具"></a>周边工具</h2><ul>
+<li><strong>文本编辑器sublime:</strong> <a href="http://www.sublimetext.com/" target="_blank" rel="noopener">http://www.sublimetext.com/</a></li>
+<li><strong>IDE: PhpStorm:</strong> <a href="https://www.jetbrains.com/phpstorm/" target="_blank" rel="noopener">https://www.jetbrains.com/phpstorm/</a> 不过初学者推荐使用文本编辑器</li>
+<li><strong>Git的使用:</strong> <a href="http://rogerdudler.github.io/git-guide/" target="_blank" rel="noopener">http://rogerdudler.github.io/git-guide/</a></li>
+<li><strong>Composer的使用:</strong> <a href="http://www.phpcomposer.com/" target="_blank" rel="noopener">http://www.phpcomposer.com/</a></li>
+</ul>
+<h2 id="能力目标"><a href="#能力目标" class="headerlink" title="能力目标"></a>能力目标</h2><ul>
+<li style="list-style: none"><input type="checkbox"> 掌握基本的语法</li>
+<li style="list-style: none"><input type="checkbox"> 自己搭建基本的LAMP/LNMP环境</li>
+<li style="list-style: none"><input type="checkbox"> 会使用基本的Linux命令行操作</li>
+</ul>
+<p><strong>Tip:</strong> 可以通过腾讯实验室以做实验的方式学习环境搭建</p>
+<ul>
+<li><a href="https://www.qcloud.com/developer/labs/lab/10084" target="_blank" rel="noopener">搭建 LAMP + CodeIgniter 开发环境</a></li>
+<li><a href="https://www.qcloud.com/developer/labs/lab/10087" target="_blank" rel="noopener">搭建 LNMP + CodeIgniter 开发环境</a></li>
+</ul>
+<ol start="5">
+<li>给自己定一个小目标</li>
+</ol>
+<p>设定时间，安排进度，自己搭建一个简单的博客系统</p>
+<h1 id="进阶开发"><a href="#进阶开发" class="headerlink" title="进阶开发"></a>进阶开发</h1><h2 id="书籍和文档-1"><a href="#书籍和文档-1" class="headerlink" title="书籍和文档"></a>书籍和文档</h2><ul>
+<li><strong>PHP核心技术与最佳实践:</strong> <a href="https://book.douban.com/subject/3549421/" target="_blank" rel="noopener">https://book.douban.com/subject/3549421/</a></li>
+<li><strong>DesignPatterns PHP:</strong> <a href="https://github.com/domnikl/DesignPatternsPHP" target="_blank" rel="noopener">https://github.com/domnikl/DesignPatternsPHP</a></li>
+<li><strong>Clean Code:</strong> <a href="https://book.douban.com/subject/3032825/" target="_blank" rel="noopener">https://book.douban.com/subject/3032825/</a></li>
+</ul>
+<p>PHP经典的 <code>LAMP/LNMP</code> 架构，线上PHP服务基本全部是部署在Linux系统上的，所以学习常用的linx命令是必须的，这里推荐两个学习资料:</p>
+<ul>
+<li><strong>Linux大棚命令百篇（上）:</strong> <a href="https://book.douban.com/subject/26849802/" target="_blank" rel="noopener">https://book.douban.com/subject/26849802/</a></li>
+<li><strong>Linux大棚命令百篇（下）:</strong> <a href="https://book.douban.com/subject/26849844/" target="_blank" rel="noopener">https://book.douban.com/subject/26849844/</a></li>
+</ul>
+<p><strong>Tip:</strong> shell命令更是用到了学什么效果更好，当然如果你时间充裕，可以把上面介绍的两本书好好学习和实践一下，语言通俗幽默，案例也有一定的深度，平常用到完了怎么用就执行下 tldr 的命令（不光是基本的shell命令），反复几次就记住了，不要死记硬背．</p>
+<h2 id="能力目标-1"><a href="#能力目标-1" class="headerlink" title="能力目标"></a>能力目标</h2><ul>
+<li style="list-style: none"><input type="checkbox"> 熟练掌握一个PHP web框架，对原理有基本的认识</li>
+<li style="list-style: none"><input type="checkbox"> 使用PHP框架限定时间，安排任务，自己实现一个博客管理系统（不是基于wordpress）</li>
+<li style="list-style: none"><input type="checkbox"> 有书写简洁代码的习惯，养成代码”洁癖”</li>
+</ul>
+<h2 id="拓展知识-1"><a href="#拓展知识-1" class="headerlink" title="拓展知识"></a>拓展知识</h2><ul>
+<li>熟练掌握一个PHP web框架的使用，不要纠结与框架的选择，选择一个主流的学习即可**．很多框架的设计思路是相似的，很多后续也会慢慢融合和相互借鉴．个人推荐初学者学习Yii2框架（难度，复杂度和代码封装性适中）</li>
+<li>在了解和熟悉框架之后，多思考框架的设计理念，结合 <code>DesignPatterns PHP</code> 去发现框架是如何很好的应用设计模式组织代码的</li>
+<li>了解 <a href="https://github.com/jupeter/clean-code-php" target="_blank" rel="noopener">clean code</a> 的原则，并且有意识用于平常代码的编写，适时重构自己的代码</li>
+</ul>
+
+    
+  </div>
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持vincenthou</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="//vdemo.qiniudn.com/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            <img src="//vdemo.qiniudn.com/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/07/28/后端系统问题排查案例/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2017/08/10/深入理解babel/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'vincenthou';
+    
+    var disqus_url = 'https://vincenthou.github.io/2017/08/10/PHP学习指南/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//vincenthou.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

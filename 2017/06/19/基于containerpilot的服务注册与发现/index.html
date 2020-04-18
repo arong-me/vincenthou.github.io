@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <link rel="dns-prefetch" href="//vdemo.qiniudn.com">
+  <link rel="dns-prefetch" href="//user-images.githubusercontent.com">
+  
+  <title>基于containerpilot的服务注册与发现 | VincentHou</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="architecture,backend,microservice,">
+  
+
+  <meta name="description" content="本文是针对项目中使用的一些总结，不过如果要说清楚应用场景，还是要简单说明白几个概念的。 微服务不管是前端还是后端服务，项目开始的时候追求短平快，所有的代码会放在一个代码库中，基于同一个框架和语言开发，顶多根据文件或者文件夹做一下模块化。前端和后端服务做一下分离（或者也没有做），放在一个SLB后面，作为无状态的应用服务器也能实现基本的水平扩容。然而，随着业务的快速发展，这样的简单结构会逐渐变成障碍。">
+<meta name="keywords" content="architecture,backend,microservice">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于containerpilot的服务注册与发现">
+<meta property="og:url" content="https://vincenthou.github.io/2017/06/19/基于containerpilot的服务注册与发现/index.html">
+<meta property="og:site_name" content="VincentHou">
+<meta property="og:description" content="本文是针对项目中使用的一些总结，不过如果要说清楚应用场景，还是要简单说明白几个概念的。 微服务不管是前端还是后端服务，项目开始的时候追求短平快，所有的代码会放在一个代码库中，基于同一个框架和语言开发，顶多根据文件或者文件夹做一下模块化。前端和后端服务做一下分离（或者也没有做），放在一个SLB后面，作为无状态的应用服务器也能实现基本的水平扩容。然而，随着业务的快速发展，这样的简单结构会逐渐变成障碍。">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://user-images.githubusercontent.com/1998742/28850755-17ab5de2-7751-11e7-9491-212e1243f966.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/1998742/28851314-47753266-7754-11e7-98cd-2cc781f2daff.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/1998742/28851324-508d1d82-7754-11e7-90b4-19c7338f4cda.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/1998742/28851464-33fee758-7755-11e7-918c-0e6a3553b7e6.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/1998742/28851453-21839038-7755-11e7-9bb0-47f961a3de8c.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/1998742/28851431-f128f338-7754-11e7-97de-a9778756ca77.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/1998742/29553622-89b18f3a-874e-11e7-9ce9-a5472339aca2.png">
+<meta property="og:image" content="https://user-images.githubusercontent.com/1998742/29651399-2dc2efc6-88d3-11e7-8f61-7b3ea551a544.png">
+<meta property="og:updated_time" content="2020-04-18T12:59:06.167Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于containerpilot的服务注册与发现">
+<meta name="twitter:description" content="本文是针对项目中使用的一些总结，不过如果要说清楚应用场景，还是要简单说明白几个概念的。 微服务不管是前端还是后端服务，项目开始的时候追求短平快，所有的代码会放在一个代码库中，基于同一个框架和语言开发，顶多根据文件或者文件夹做一下模块化。前端和后端服务做一下分离（或者也没有做），放在一个SLB后面，作为无状态的应用服务器也能实现基本的水平扩容。然而，随着业务的快速发展，这样的简单结构会逐渐变成障碍。">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/1998742/28850755-17ab5de2-7751-11e7-9491-212e1243f966.png">
+
+  
+
+  
+    <link rel="icon" href="//assets-cdn.github.com/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-39656503-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?1e5d8068abdfb22e27ebe052a4feae14";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">更多</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">更多</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#微服务"><span class="toc-text">微服务</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#服务的注册与发现"><span class="toc-text">服务的注册与发现</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#服务注册中心"><span class="toc-text">服务注册中心</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#手工注册和查询的痛苦"><span class="toc-text">手工注册和查询的痛苦</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#独立出注册和查询为独立服务"><span class="toc-text">独立出注册和查询为独立服务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用-containerpilot"><span class="toc-text">使用 containerpilot</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#概要"><span class="toc-text">概要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#环境变量"><span class="toc-text">环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#获取依赖服务的实例地址"><span class="toc-text">获取依赖服务的实例地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动-containerpilot"><span class="toc-text">启动 containerpilot</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-基于containerpilot的服务注册与发现" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">基于containerpilot的服务注册与发现</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.06.19</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Vincent Hou</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://vincenthou.github.io/2017/06/19/基于containerpilot的服务注册与发现/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>本文是针对项目中使用的一些总结，不过如果要说清楚应用场景，还是要简单说明白几个概念的。</p>
+<h1 id="微服务"><a href="#微服务" class="headerlink" title="微服务"></a>微服务</h1><p>不管是前端还是后端服务，项目开始的时候追求短平快，所有的代码会放在一个代码库中，基于同一个框架和语言开发，顶多根据文件或者文件夹做一下模块化。前端和后端服务做一下分离（或者也没有做），放在一个SLB后面，作为无状态的应用服务器也能实现基本的水平扩容。然而，随着业务的快速发展，这样的简单结构会逐渐变成障碍。微服务的实践其实应该由来已久，只是最近几年被炒的火热，而微服务的核心思想还是设计模式中经典的思想：<strong>单一责任</strong>。基于这个思想，微服务的其他便利才有了落脚点。</p>
+<p><img src="https://user-images.githubusercontent.com/1998742/28850755-17ab5de2-7751-11e7-9491-212e1243f966.png" alt="image"></p>
+<p>更多内容可以参考这里: <a href="http://dockone.io/article/394" target="_blank" rel="noopener">微服务架构的优势与不足</a></p>
+<h1 id="服务的注册与发现"><a href="#服务的注册与发现" class="headerlink" title="服务的注册与发现"></a>服务的注册与发现</h1><p>既然我们的目标是把一个服务打散，也就是从单进程要放到多进程中去，就需要涉及到进程间通信。经典的操作系统理论理论里面提到的IPC方法有: 管道，有名管道（无父子关系约束），信号量（计数锁），消息队列，信号，共享内存，套接字。这些方法大多是基于单机器中进程通信的方式。我们利用微服务在部署的时候另外一个原则: <strong>消除单点</strong>，所以肯定是需要能够跨机器进程的方式通信了，那套接字就是重要的选择，实际应用中因为开发更多在应用层实现，所以Restful和RPC的方式是常用的手段。这里就存在一个问题，服务因为彼此隔离，彼此通信的时候怎么知道彼此的存在，同时在需要调用依赖的服务时，如何能够调用到<strong>合适的机器</strong>（这里指的是机器的IP和端口号），这就是服务的注册与发现问题了。同时服务的注册和发现也存在两种模式: 客户端模式和服务端模式。</p>
+<p><img src="https://user-images.githubusercontent.com/1998742/28851314-47753266-7754-11e7-98cd-2cc781f2daff.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/1998742/28851324-508d1d82-7754-11e7-90b4-19c7338f4cda.png" alt="image"></p>
+<p>可以看到这里的差别主要在于是否将注册中心暴露出去，我们后面的讨论基于<strong>客户端模式</strong>。</p>
+<p>可能你直接看上面的架构，感觉不到这个注册中心的好处，让我们再放几张图，看看我们原来是怎么做的</p>
+<p><img src="https://user-images.githubusercontent.com/1998742/28851464-33fee758-7755-11e7-918c-0e6a3553b7e6.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/1998742/28851453-21839038-7755-11e7-9bb0-47f961a3de8c.png" alt="image"></p>
+<p><img src="https://user-images.githubusercontent.com/1998742/28851431-f128f338-7754-11e7-97de-a9778756ca77.png" alt="image"></p>
+<p>当然实际场景有可能比这还要复杂，可能中间用的还有F5或者haproxy，这里只是个示意。刚开始简单实现就档个nginx，对upstream有个基本的healthcheck，通过反向代理就请求到后端服务就可以了。当访问量上升，单个nginx扛不住就再在前端档个LVS，通过四层协议转发IP包，第二层对nginx分组讲负载进一步分流。但是这样LVS变成了单点，而且配置变得更加复杂。最后又不得不把这个单点消除，由客户端智能判断合适的分组，请求后端的服务。这里nginx在所有情况下既担当了负载均衡的角色，又担当了服务发现的角色（如果服务分组的时候根据访问量来分，会把访问量差不多的放在一个分组，通过nginx重写路由映射到多个后端服务）。这里很明显配置都是需要人工干预的，任何一台后端实际服务的机器IP变化都需要运维手动维护，繁琐而且容易出错。这样大家就可以感受到上面注册中心的好处了把，所有的服务列表可以集中在一个地方管理。</p>
+<h2 id="服务注册中心"><a href="#服务注册中心" class="headerlink" title="服务注册中心"></a>服务注册中心</h2><p>所有服务都集中存在一个地方管理，现在的主流方案主要是这三个</p>
+<ul>
+<li><a href="https://github.com/hashicorp/consul" target="_blank" rel="noopener">consul</a>: 提供了一站式的解决方案，健康检查，DNS解析一应俱全，甚至提供了个简单的UI工具</li>
+<li><a href="https://github.com/coreos/etcd" target="_blank" rel="noopener">etcd</a>: 仅提供基本的kv分布式存储</li>
+<li><a href="https://github.com/apache/zookeeper" target="_blank" rel="noopener">zookeeper</a>: 一些老的系统还在使用，配置管理都相对麻烦</li>
+</ul>
+<p>因为只用过 <code>consul</code>，下面都是以它为依据展开，但是作为服务注册中心的概念上是相似的．作为注册中心基本的功能就是kv的存储，服务的配置信息还有应用的配置信息都可以放在这里，<code>consul</code> 提供了 <code>agent</code> 运行的模式，也就是 <code>client</code> 和 <code>server</code> 模式，看下图</p>
+<p><img src="https://user-images.githubusercontent.com/1998742/29553622-89b18f3a-874e-11e7-9ce9-a5472339aca2.png" alt="image"></p>
+<p><code>server</code> 模式的 <code>agent</code> 互相通信构成一个集群，主要负责参与选出集群的主节点和实现信息同步, <code>client</code> 模式的 <code>agent</code> 只是同步集群的数据，或者在自己接受到数据变更请求的时候将变化广播出去．<code>server</code> 模式的 <code>agent</code> 组成的集群可以放在多个数据中心来保证高可用，通过 <code>gossip</code> 协议实现分布式的数据一致性．这里从简化概念考虑，你可以把 <code>consul</code> 的整个集群当成一个”哈希表”，服务都是注册到这个”哈希表”中，然后其他的服务通过查找这个”哈希表”来获取实际调用的下游服务．实际情况并不是这么简单，因为不是本文的重点，这里略过了，有兴趣的同学可以自己看下<a href="https://www.consul.io/docs/index.html" target="_blank" rel="noopener">官方文档</a>．</p>
+<p><strong>Tip:</strong> 基于应用的配置信息提供了<a href="https://github.com/hashicorp/consul-template" target="_blank" rel="noopener">consul-template</a>实现动态的配置更新，结合服务注册在一起使用可以实现自动的依赖服务配置信息更新．本来这样是很酸爽，只是这样有个缺点，也是在实践中发现的，就是配置的变更管理如果用consul来管就没有办法track变更的历史记录了，在加上SRE限制了 <code>consul UI</code> 的访问权限，很多时候上线因为开发不能直接通过UI修改，这个便利性就大打折扣了．经常会出现有新的配置没有即使同步到生产环境的情况，人工管理的成本很高，所以在系统中尝试使用后就退化成普通的文件配置（也可以track变更，因为有git的提交记录）.</p>
+<h2 id="手工注册和查询的痛苦"><a href="#手工注册和查询的痛苦" class="headerlink" title="手工注册和查询的痛苦"></a>手工注册和查询的痛苦</h2><p>因为上面提到的 <code>consul</code> 基本的功能是提供了服务信息的存储，通过它的<a href="https://www.consul.io/api/health.html" target="_blank" rel="noopener">resulful API</a>可以很容易的将一个服务注册到 <code>consul</code> 里面，同时 <code>consul</code> 也会自动对他执行健康检查，在服务挂掉的时候从可用服务列表中可以过滤掉（一般一个服务会对应一个 <code>SLB</code> 和后面一堆的实际应用服务器）有问题的机器，保证服务的高可用．同时我们也需要在对服务进程接受到特殊信号量，比如 <code>SIGKILL</code> 的时候将服务从 <code>consul</code> 中移除，这就也需要调用API实现．虽然可以通过将注册和解注册的行为通过公共库的方式在一个地方维护，但毕竟不是那么优雅．</p>
+<p>对应的，因为是使用查询注册中心的方式来做服务发现（其实就是客户端的服务发现 smart client）,需要客户端通过调用 <code>consul</code> 的 restful API 来查询，虽然可以通过在每个服务实例上启动一个在 <code>client</code> 模式下的 <code>agent</code> 缓解集群的并发访问压力，但是还是需要客户端主动查询的，有没有更好的方式呢？</p>
+<h2 id="独立出注册和查询为独立服务"><a href="#独立出注册和查询为独立服务" class="headerlink" title="独立出注册和查询为独立服务"></a>独立出注册和查询为独立服务</h2><p>终于主角登场了，<a href="https://github.com/joyent/containerpilot" target="_blank" rel="noopener">containerpilot</a>是大名鼎鼎的 <code>joyent</code> 公司（最早开发nodejs的公司）开源出来的一款针对容器内服务做自动注册和发现的好工具．之前我们提到，原始的服务注册和发现依赖于程序通过restful API的调用实现，这样就需要在代码中实现调用的逻辑．现在用了 <code>containerpilot</code> 再加上一些封装之后，就可以实现程序对于服务注册中心的无感知．具体情况是这样的，所有 <code>containerpilot</code> 相关的配置放在一个固定的目录下面，例如 <code>/etc/containerpilot</code>，在容器启动的时候会执行脚本从依赖关系文件（例如 <code>serviceDependencies.json</code>）中读取出下游服务列表，删除socker文件（例如 <code>/var/run/containerpilot.socket</code>），执行 <code>containerpilot</code> 的可执行文件．<code>containerpilot</code> 读取配置文件 <code>config.json5</code>，通过模板语法，在不同的条件下根据环境变量激活不同的job．这里面最重要的部分是这几个:</p>
+<ul>
+<li>启动 <code>consul</code> 的agent或者直接连接 <code>consul</code> 的cluster，将当前服务注册进去，第一次生成依赖服务的地址 <code>services.json</code></li>
+<li>在 <code>containerpilot</code> 可以跟consul的agent或者cluster通信之后，获取依赖服务的列表，通过 <code>consul-template</code> 将服务的信息渲染到预定义好的模板文件中</li>
+<li>watch在consul中依赖的服务，当检测到更新的时候给服务发送 <code>SIGHUP</code> 的信号提示服务重新读取依赖服务的最新地址 <code>services.json</code></li>
+<li>通过调用 <code>ping</code> 命令对服务进行健康检查，在服务不健康甚至是容器异常退出的时候会将 <code>consul</code> 中服务的状态标记为不可用（不会解注册）</li>
+</ul>
+<p>一个服务跟 <code>containerpilot</code> 集成的结构是这样的</p>
+<p><img src="https://user-images.githubusercontent.com/1998742/29651399-2dc2efc6-88d3-11e7-8f61-7b3ea551a544.png" alt="untitled diagram 4"></p>
+<h2 id="使用-containerpilot"><a href="#使用-containerpilot" class="headerlink" title="使用 containerpilot"></a>使用 containerpilot</h2><h3 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h3><p>首先明确两个概念：</p>
+<ul>
+<li>被托管服务，即运行在本容器内的主要进程，对外提供某种功能。</li>
+<li>依赖服务，即被托管服务所依赖的服务，通常运行在其它容器内。</li>
+</ul>
+<p>containerpilot 基于 consul 实现了如下两个功能：</p>
+<ul>
+<li>将被托管服务注册到 consul 内，并维持健康检查心跳，在容器停止时自动解注册该服务。</li>
+<li>获取依赖服务的实例地址。</li>
+</ul>
+<p>这两个功能即服务的注册和发现，可同时使用，也可只使用其中任意一个。</p>
+<p>使用服务注册功能时，或者使用服务发现功能且需要接收依赖服务实例更新信号时，被托管服务需由 containerpilot 管理，即最终服务管理结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- runit</span><br><span class="line">    - containerpilot</span><br><span class="line">        - your service</span><br></pre></td></tr></table></figure>
+<p>只使用服务发现功能且不需要接收依赖服务实例更新信号时，被托管服务可直接由 runit 管理，即最终服务管理结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- runit</span><br><span class="line">    - containerpilot</span><br><span class="line">    - your service</span><br></pre></td></tr></table></figure>
+<h3 id="环境变量"><a href="#环境变量" class="headerlink" title="环境变量"></a>环境变量</h3><p>使用 containerpilot 请按需设置以下环境变量：</p>
+<ul>
+<li><code>CONSUL_ADDR</code> ：容器内可使用该值调用 consul API ，默认值为 <code>127.0.0.1:8500</code> 。使用默认值时，会在容器内部起一个 consul client ，并根据 <code>CONSUL_JOIN_ADDR</code> 和 <code>CONSUL_ADVERTISE</code> 加入已有集群。</li>
+<li><code>CONSUL_JOIN_ADDR</code> ：已有 consul 集群中任意一个节点的 IP 地址，consul client 加入集群时使用。</li>
+<li><code>CONSUL_ADVERTISE</code> ：consul client 加入集群时使用哪个 IP 通信，需用 k8s pod IP 或 container host IP。</li>
+<li><code>SERVICE_NAME</code> ：注册到 consul 中被托管服务名称，ID 会自动设置为 <code>${SERVICE_NAME}-${CONTAINER_HOSTNAME}</code> 。可以从外部传入或内部写死。此外，如果存在环境变量 <code>CONSUL_PREFIX</code> ，其值将会被拼到服务名称和 ID 前面。默认值为 <code>main</code> 。</li>
+<li><code>SERVICE_PORT</code> ：注册到 consul 中被托管服务端口。不传则不注册服务到 consul 。</li>
+<li><code>SERVICE_COMMAND</code> ：启动被托管服务的命令和参数，不传递则不启动。</li>
+<li><code>SERVICE_INTERFACE</code> ：注册到 consul 中被托管服务地址，可选网卡名如 <code>eth0</code> 或静态地址 <code>static:192.168.1.100</code> ，默认值为 <code>eth0</code> 。</li>
+<li><code>SERVICE_SIGNAL_CHANGED</code> ：当依赖服务实例发生变化时，是否给被托管服务发送 <code>SIGHUP</code> ，传值代表发送。</li>
+</ul>
+<h3 id="获取依赖服务的实例地址"><a href="#获取依赖服务的实例地址" class="headerlink" title="获取依赖服务的实例地址"></a>获取依赖服务的实例地址</h3><p>被托管服务如果依赖于其他服务，需在项目中添加 <code>serviceDependencies.json</code> 文件，构建 docker 镜像时把这个文件复制到 WORKDIR 下，示例如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"service1"</span>: [<span class="string">"service2"</span>, <span class="string">"service3"</span>],</span><br><span class="line">  <span class="attr">"service2"</span>: [<span class="string">"service4"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>表示 <code>service1</code> 依赖于 <code>service2</code> 和 <code>service3</code> ，而 <code>service2</code> 依赖于 <code>service4</code> ，即 key 为被托管的服务名，value 为该服务的依赖列表。</p>
+<p>对于不使用服务注册，只需要服务发现的情况，可以使用 <code>SERVICE_NAME</code> 的默认值 <code>main</code> 作为 key，示例如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"main"</span>: [<span class="string">"service2"</span>, <span class="string">"service3"</span>],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>containerpilot 会根据 <code>SERVICE_NAME</code> 选取需要监控的依赖服务，比如设置 <code>SERVICE_NAME</code> 为 <code>service1</code> ，则将监控 <code>service2</code> 和 <code>service3</code>，当依赖服务实例发生变化时，会更新 <code>/etc/containerpilot/services.json</code> ，生成的内容示例如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"service2"</span>: [</span><br><span class="line">    <span class="string">"1.1.1.1:80"</span>,</span><br><span class="line">    <span class="string">"2.2.2.2:80"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="attr">"service3"</span>: [</span><br><span class="line">    <span class="string">"3.3.3.3:80"</span>,</span><br><span class="line">    <span class="string">"4.4.4.4:80"</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中 key 为依赖的服务名，value 为该服务的实例地址数组。</p>
+<p>被托管服务要获取该文件的更新可通过如下方式：</p>
+<ul>
+<li>golang 、java 这种 long running 的，需要托管于 containerpilot ，然后设置环境变量 <code>SERVICES_SIGNAL_CHANGED</code> ，然后代码中处理 <code>SIGHUP</code> 信号，收到信号时重新读取该文件。</li>
+<li>php 这种不好处理信号的，可以每次处理请求时都重新读取该文件。</li>
+</ul>
+<h3 id="启动-containerpilot"><a href="#启动-containerpilot" class="headerlink" title="启动 containerpilot"></a>启动 containerpilot</h3><p>containerpilot 应作为 runit service 启动，示例 <code>run</code> 脚本如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 假设外部已传入 CONSUL_JOIN_ADDR 环境变量</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 假设运行在 k8s 上，则 CONSUL_ADVERTISE 使用默认值即可</span></span><br><span class="line">export SERVICE_NAME="test"</span><br><span class="line">export SERVICE_PORT=80</span><br><span class="line">export SERVICE_COMMAND="myservice args"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> containerpilot 默认使用健康检查命令 ./ping ，即需要把 ping 文件放在  WORKDIR 下，并在启动 containerpilot 前切换到 WORKDIR</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> WORKDIR 默认为 /</span></span><br><span class="line">cd /</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动 containerpilot</span></span><br><span class="line">exec /etc/containerpilot/containerpilot.sh</span><br></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://github.com/joyent/containerpilot" target="_blank" rel="noopener">https://github.com/joyent/containerpilot</a></li>
+<li><a href="https://www.joyent.com/blog/applications-on-autopilot" target="_blank" rel="noopener">https://www.joyent.com/blog/applications-on-autopilot</a></li>
+<li><a href="http://www.jianshu.com/p/c144a577f3d1" target="_blank" rel="noopener">http://www.jianshu.com/p/c144a577f3d1</a></li>
+</ul>
+
+    
+  </div>
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持vincenthou</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="//vdemo.qiniudn.com/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            <img src="//vdemo.qiniudn.com/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/06/18/前端的数据和状态管理/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2017/06/23/高并发系统设计思路/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'vincenthou';
+    
+    var disqus_url = 'https://vincenthou.github.io/2017/06/19/基于containerpilot的服务注册与发现/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//vincenthou.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

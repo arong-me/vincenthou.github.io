@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <link rel="dns-prefetch" href="//vdemo.qiniudn.com">
+  <link rel="dns-prefetch" href="//user-images.githubusercontent.com">
+  
+  <title>【翻译】有帮助的柯里化 | VincentHou</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="javascript,translation,">
+  
+
+  <meta name="description" content="原文地址，译文如下 有帮助的curry我最近使用Ramda实现函数式组合的文章涉及到一个重要的主题。为了使用Ramda的方式做某种组合，我们需要这些方法被柯里化。 柯里化是啥，能吃吗？ 实际上，柯里化 是从 Haskell 来的。Haskell是第一个研究这种技术的。（是的，他们用自己的名字命名了一个函数式编程语言。不仅如此，Curry的中间初始是B，或者当然代表的是Brainf*ck） 柯里化是">
+<meta name="keywords" content="javascript,translation">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【翻译】有帮助的柯里化">
+<meta property="og:url" content="https://vincenthou.github.io/2017/06/17/【翻译】有帮助的柯里化/index.html">
+<meta property="og:site_name" content="VincentHou">
+<meta property="og:description" content="原文地址，译文如下 有帮助的curry我最近使用Ramda实现函数式组合的文章涉及到一个重要的主题。为了使用Ramda的方式做某种组合，我们需要这些方法被柯里化。 柯里化是啥，能吃吗？ 实际上，柯里化 是从 Haskell 来的。Haskell是第一个研究这种技术的。（是的，他们用自己的名字命名了一个函数式编程语言。不仅如此，Curry的中间初始是B，或者当然代表的是Brainf*ck） 柯里化是">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-04-18T12:59:06.167Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【翻译】有帮助的柯里化">
+<meta name="twitter:description" content="原文地址，译文如下 有帮助的curry我最近使用Ramda实现函数式组合的文章涉及到一个重要的主题。为了使用Ramda的方式做某种组合，我们需要这些方法被柯里化。 柯里化是啥，能吃吗？ 实际上，柯里化 是从 Haskell 来的。Haskell是第一个研究这种技术的。（是的，他们用自己的名字命名了一个函数式编程语言。不仅如此，Curry的中间初始是B，或者当然代表的是Brainf*ck） 柯里化是">
+
+  
+
+  
+    <link rel="icon" href="//assets-cdn.github.com/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-39656503-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?1e5d8068abdfb22e27ebe052a4feae14";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">更多</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">更多</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#有帮助的curry"><span class="toc-text">有帮助的curry</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#无聊-对我有什么帮助吗？"><span class="toc-text">无聊!对我有什么帮助吗？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#不在乎：我又不是个数学极客"><span class="toc-text">不在乎：我又不是个数学极客</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#所以柯里化有多重要？"><span class="toc-text">所以柯里化有多重要？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一个小秘密"><span class="toc-text">一个小秘密</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-【翻译】有帮助的柯里化" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">【翻译】有帮助的柯里化</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.06.17</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Vincent Hou</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://vincenthou.github.io/2017/06/17/【翻译】有帮助的柯里化/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>原文<a href="http://fr.umio.us/favoring-curry/" target="_blank" rel="noopener">地址</a>，译文如下</p>
+<h1 id="有帮助的curry"><a href="#有帮助的curry" class="headerlink" title="有帮助的curry"></a>有帮助的curry</h1><p>我最近使用<a href="https://github.com/ramda/ramda" target="_blank" rel="noopener">Ramda</a>实现函数式组合的<a href="http://fr.umio.us/why-ramda/" target="_blank" rel="noopener">文章</a>涉及到一个重要的主题。为了使用Ramda的方式做某种组合，我们需要这些方法被柯里化。</p>
+<p>柯里化是啥，能吃吗？</p>
+<p>实际上，<code>柯里化</code> 是从 Haskell 来的。Haskell是第一个研究这种技术的。（是的，他们用自己的名字命名了一个函数式编程语言。不仅如此，Curry的中间初始是<code>B</code>，或者当然代表的是<a href="http://en.wikipedia.org/wiki/Brainfuck" target="_blank" rel="noopener">Brainf*ck</a>）</p>
+<p>柯里化是这么一个过程，它一个本来需要多个参数的方法转化为这样一种方法，这个方法在传递更少参数之后，返回一个新方法，返回的这个新方法会等待获取余下的参数。</p>
+<p>基本的例子看起来像这样，这是一个普通的函数:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 没有柯里化的版本</span><br><span class="line"></span><br><span class="line">var formatName1 = function(first, middle, last) &#123;</span><br><span class="line">  return first + middle + &apos; &apos; + last;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">formatName1(&apos;John&apos;, &apos;Paul&apos;, &apos;Jones&apos;);</span><br><span class="line">// =&gt; &apos;John Paul Jones&apos; // (呃, 是音乐家或者海军上将?)</span><br><span class="line"></span><br><span class="line">formatName1(&apos;John&apos;, &apos;Paul&apos;)</span><br><span class="line"></span><br><span class="line">// =&gt; &apos;John Paul undefined&apos;</span><br></pre></td></tr></table></figure>
+<p>但是一个柯里化的版本就更加有用了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">// 柯里化的版本</span><br><span class="line">var formatName2 = R.curry(function(first, middle, last) &#123;</span><br><span class="line">  return first + &apos; &apos; + middel + &apos; &apos; + last;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">formatName2(&apos;John&apos;, &apos;Paul&apos;, &apos;Jones&apos;);</span><br><span class="line">// =&gt; &apos;John Paul Jones&apos; (肯定是个音乐家)</span><br><span class="line"></span><br><span class="line">var jp = formatName2(&apos;John&apos;, &apos;Paul&apos;);</span><br><span class="line">// =&gt; 返回一个方法</span><br><span class="line"></span><br><span class="line">jp(&apos;Jones&apos;);</span><br><span class="line">// =&gt; &apos;John Paul Jones&apos; (maybe this one&apos;s the admiral)</span><br><span class="line"></span><br><span class="line">jp(&apos;Stevens&apos;);</span><br><span class="line">//=&gt; &apos;John Paul Stevens&apos; (the Supreme Court Justice)</span><br><span class="line"></span><br><span class="line">jp(&apos;Pontiff&apos;);</span><br><span class="line">//=&gt; &apos;John Paul Pontiff&apos; (ok, so I cheated.)</span><br><span class="line"></span><br><span class="line">jp(&apos;Ziller&apos;);</span><br><span class="line">//=&gt; &apos;John Paul Ziller&apos; (magician, a wee bit fictional)</span><br><span class="line"></span><br><span class="line">jp(&apos;Georgeandringo&apos;);</span><br><span class="line">//=&gt; &apos;John Paul Georgeandringo&apos; (rockers)</span><br></pre></td></tr></table></figure>
+<p>或者</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[&apos;Jones&apos;, &apos;Stevens&apos;, &apos;Eiller&apos;].map(jp);</span><br><span class="line">//=&gt; [&apos;John Paul Jones&apos;, &apos;John Paul Stevens&apos;, &apos;John Paul Ziller&apos;]</span><br></pre></td></tr></table></figure>
+<p>你也可以在多次这样传递</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">var james = formatName2(&apos;James&apos;);</span><br><span class="line">// =&gt; return a function</span><br><span class="line"></span><br><span class="line">james(&apos;Byron&apos;, &apos;Dean&apos;);</span><br><span class="line">// =&gt; &apos;James Byron Dean&apos;(rebel)</span><br><span class="line"></span><br><span class="line">var je = james(&apos;Earl&apos;);</span><br><span class="line">// 也会返回一个方法</span><br><span class="line">je(&apos;Carter&apos;);</span><br><span class="line">// =&gt; &apos;James Earl Carter&apos;(president)</span><br><span class="line">je(&apos;Jones&apos;);</span><br><span class="line">// =&gt; &apos;James Earl Jones&apos; (actor, Vader)</span><br></pre></td></tr></table></figure>
+<p>有些人会认为我们在做的应该叫”部分应用”更加合适，并且”柯里化”应该只是用在这种情况：返回的方法只接收一个参数，其他每个参数都使用一个独立的新方法处理直到所有必须的参数都被提供。这些人可以继续这样迷信（意译）。</p>
+<p><strong>补充:</strong> 其实这里就是使用闭包给方法绑定了数据，通过返回的函数在之后的调用中复用之前绑定的数据。这里使用的例子是一个经典的场景，叫做 <code>惰性求值</code>。</p>
+<h1 id="无聊-对我有什么帮助吗？"><a href="#无聊-对我有什么帮助吗？" class="headerlink" title="无聊!对我有什么帮助吗？"></a>无聊!对我有什么帮助吗？</h1><p>下面是个更有意义的例子。如果你想求一个数字集合的和，你可以这么做：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 普通JS</span><br><span class="line">var add = function(a, b) &#123;return a + b;&#125;;</span><br><span class="line">var numbers = [1, 2, 3, 4, 5];</span><br><span class="line">var sum = numbers.reduce(add, 0); // =&gt; 15</span><br></pre></td></tr></table></figure>
+<p>如果你想写一个通用的函数来计算数字列表的总数，你可能会这么写：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var total = function(list) &#123;</span><br><span class="line">  return list.reduce(add, 0);</span><br><span class="line">&#125;</span><br><span class="line">var sum = total(numbers); // =&gt; 15</span><br></pre></td></tr></table></figure>
+<p>在 Ramda里面, <code>total</code> 和 <code>sum</code> 非常相似。亦可以这样定义 <code>sum</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var sum = R.reduce(add, 0, numbers); // =&gt; 15</span><br></pre></td></tr></table></figure>
+<p>但是因为 <code>reduce</code> 是一个柯里化过的方法，但你不传最后一个参数的时候，就像在上面你自己定义的 <code>total</code> 函数一样:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 在 Ramda 里</span><br><span class="line">var total = R.reduce(add, 0); // 返回一个柯里化之后的方法</span><br></pre></td></tr></table></figure>
+<p>你仅仅拿到一个方法你可以这样调用:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var sum = total(numbers); // =&gt; 15</span><br></pre></td></tr></table></figure>
+<p>再次注意方法的定义和方法应用于数据上是多么相似</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var total = R.reduce(add, 0); // =&gt; function</span><br><span class="line">var sum = R.reduce(add, 0, numbers); // =&gt; 15</span><br></pre></td></tr></table></figure>
+<h1 id="不在乎：我又不是个数学极客"><a href="#不在乎：我又不是个数学极客" class="headerlink" title="不在乎：我又不是个数学极客"></a>不在乎：我又不是个数学极客</h1><p>所以你是一个web开发，是吧？你需要发一个AJAX请求到服务器？你需要使用 <a href="http://promises-aplus.github.io/promises-spec/" target="_blank" rel="noopener">Promise</a>？（起码我希望是这样）你需要操作返回的数据，过滤它，取得子集？或者你做服务器端开发？你异步查询SQL数据库，并且操作这些结果？</p>
+<p>我能建议你做的最好的事情是你可以看看前端开发专家Jackson的精彩文章 <a href="http://hughfdjackson.com/javascript/why-curry-helps/" target="_blank" rel="noopener">为什么柯里化有帮助？</a>。这是我看过最精彩的文章。如果你是个通过视频学习者，花半个小时看下Dr. Boolean的视频 <a href="http://www.youtube.com/watch?v=m3svKOdZijA" target="_blank" rel="noopener">Underscore，你做错了</a>（不要在意标题，他没有花费他多时间实际吐槽工具库）。</p>
+<p>真的去做。看看这些，它们解释得比我好，你已经看出来我多啰嗦了，巴拉巴拉。如果你已经看过这些，你可以跳过余下的章节。他们已经比我说得更好了。</p>
+<p>该说的我都说了。</p>
+<hr>
+<p>想象我们要获取像下面这样的数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">var data = &#123;</span><br><span class="line">    result: &quot;SUCCESS&quot;,</span><br><span class="line">    interfaceVersion: &quot;1.0.3&quot;,</span><br><span class="line">    requested: &quot;10/17/2013 15:31:20&quot;,</span><br><span class="line">    lastUpdated: &quot;10/16/2013 10:52:39&quot;,</span><br><span class="line">    tasks: [</span><br><span class="line">        &#123;id: 104, complete: false,            priority: &quot;high&quot;,</span><br><span class="line">                  dueDate: &quot;2013-11-29&quot;,      username: &quot;Scott&quot;,</span><br><span class="line">                  title: &quot;Do something&quot;,      created: &quot;9/22/2013&quot;&#125;,</span><br><span class="line">        &#123;id: 105, complete: false,            priority: &quot;medium&quot;,</span><br><span class="line">                  dueDate: &quot;2013-11-22&quot;,      username: &quot;Lena&quot;,</span><br><span class="line">                  title: &quot;Do something else&quot;, created: &quot;9/22/2013&quot;&#125;,</span><br><span class="line">        &#123;id: 107, complete: true,             priority: &quot;high&quot;,</span><br><span class="line">                  dueDate: &quot;2013-11-22&quot;,      username: &quot;Mike&quot;,</span><br><span class="line">                  title: &quot;Fix the foo&quot;,       created: &quot;9/22/2013&quot;&#125;,</span><br><span class="line">        &#123;id: 108, complete: false,            priority: &quot;low&quot;,</span><br><span class="line">                  dueDate: &quot;2013-11-15&quot;,      username: &quot;Punam&quot;,</span><br><span class="line">                  title: &quot;Adjust the bar&quot;,    created: &quot;9/25/2013&quot;&#125;,</span><br><span class="line">        &#123;id: 110, complete: false,            priority: &quot;medium&quot;,</span><br><span class="line">                  dueDate: &quot;2013-11-15&quot;,      username: &quot;Scott&quot;,</span><br><span class="line">                  title: &quot;Rename everything&quot;, created: &quot;10/2/2013&quot;&#125;,</span><br><span class="line">        &#123;id: 112, complete: true,             priority: &quot;high&quot;,</span><br><span class="line">                  dueDate: &quot;2013-11-27&quot;,      username: &quot;Lena&quot;,</span><br><span class="line">                  title: &quot;Alter all quuxes&quot;,  created: &quot;10/5/2013&quot;&#125;</span><br><span class="line">        // , ...</span><br><span class="line">    ]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>并且我们需要一个方法 <code>getIncompleteTaskSummaries</code> 接收一个 <code>membername</code> 参数，然后从服务器（后者其他地方）获取数据，选择没有完成的会员，返回他们的ids，priorities, titles和due dates，根据due date排序。实际上，它返回一个应该在排序列表里面resolve的Promise。</p>
+<p>如果你传递 “Scott” 给 <code>getIncompleteTaskSummaries</code>，它可能会返回</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;id: 110, title: &quot;Rename everything&quot;,</span><br><span class="line">        dueDate: &quot;2013-11-15&quot;, priority: &quot;medium&quot;&#125;,</span><br><span class="line">    &#123;id: 104, title: &quot;Do something&quot;,</span><br><span class="line">        dueDate: &quot;2013-11-29&quot;, priority: &quot;high&quot;&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>好啦，我们开始，下面的code看起来熟悉吗？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">getIncompleteTaskSummaries = function(membername) &#123;</span><br><span class="line">    return fetchData()</span><br><span class="line">        .then(function(data) &#123;</span><br><span class="line">            return data.tasks;</span><br><span class="line">        &#125;)</span><br><span class="line">        .then(function(tasks) &#123;</span><br><span class="line">            var results = [];</span><br><span class="line">            for (var i = 0, len = tasks.length; i &lt; len; i++) &#123;</span><br><span class="line">                if (tasks[i].username == membername) &#123;</span><br><span class="line">                    results.push(tasks[i]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            return results;</span><br><span class="line">        &#125;)</span><br><span class="line">        .then(function(tasks) &#123;</span><br><span class="line">            var results = [];</span><br><span class="line">            for (var i = 0, len = tasks.length; i &lt; len; i++) &#123;</span><br><span class="line">                if (!tasks[i].complete) &#123;</span><br><span class="line">                    results.push(tasks[i]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            return results;</span><br><span class="line">        &#125;)</span><br><span class="line">        .then(function(tasks) &#123;</span><br><span class="line">            var results = [], task;</span><br><span class="line">            for (var i = 0, len = tasks.length; i &lt; len; i++) &#123;</span><br><span class="line">                task = tasks[i];</span><br><span class="line">                results.push(&#123;</span><br><span class="line">                    id: task.id,</span><br><span class="line">                    dueDate: task.dueDate,</span><br><span class="line">                    title: task.title,</span><br><span class="line">                    priority: task.priority</span><br><span class="line">                &#125;)</span><br><span class="line">            &#125;</span><br><span class="line">            return results;</span><br><span class="line">        &#125;)</span><br><span class="line">        .then(function(tasks) &#123;</span><br><span class="line">            tasks.sort(function(first, second) &#123;</span><br><span class="line">                var a = first.dueDate, b = second.dueDate;</span><br><span class="line">                return a &lt; b ? -1 : a &gt; b ? 1 : 0;</span><br><span class="line">            &#125;);</span><br><span class="line">            return tasks;</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>如果代码看起来像下面这样是不是更美妙？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var getIncompleteTaskSummaries = function(membername) &#123;</span><br><span class="line">    return fetchData()</span><br><span class="line">        .then(R.get(&apos;tasks&apos;))</span><br><span class="line">        .then(R.filter(R.propEq(&apos;username&apos;, membername)))</span><br><span class="line">        .then(R.reject(R.propEq(&apos;complete&apos;, true)))</span><br><span class="line">        .then(R.map(R.pick([&apos;id&apos;, &apos;dueDate&apos;, &apos;title&apos;, &apos;priority&apos;])))</span><br><span class="line">        .then(R.sortBy(R.get(&apos;dueDate&apos;)));</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>如果这样，那么柯里化会很适合你 。所有在这个代码块中提到的Ramda方法都被柯里化了。（实际上，所有超过一个参数的Ramda方法都被柯里化了，只有一些必要的例外。）在所有的情况下，柯里化让组合这些方法到一个优雅的块中变得简单。</p>
+<p>让我们看看发生了什么。</p>
+<p><code>get</code> （也用 <code>prop</code>）是这样定义的:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ramda.get = curry(function(name, obj) &#123;</span><br><span class="line">  return obj[name];</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>但是当我们像上面一样调用它，我们只是给了第一个参数 <code>name</code>，正如我们讨论的，这意味着我们会得到一个等待通过第一个then方法传递obj参数的方法，就是下面这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.then(R.get(&apos;tasks&apos;))</span><br></pre></td></tr></table></figure>
+<p>可以认为是下面的简化写法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.then(function(data) &#123;</span><br><span class="line">  return data.tasks;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>下面是 <code>propEq</code>，被定义为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ramda.propEq = curry(function(name, val, obj) &#123;</span><br><span class="line">  return obj[name] === val;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>所以当我们通过 <code>username</code> 和 <code>membername</code> 调用它的时候（后面的参数被作为参数传递给我们的方法），柯里化给我们返回了一个新方法，等价于</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">funciton(obj) &#123;</span><br><span class="line">  return obj[&apos;username&apos;] === membername;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>membername</code>的值被绑定为传给我们的值。</p>
+<p>这个方法之后被传给 <code>filter</code>。</p>
+<p>Ramda的 <code>filter</code> 方法就像在 <code>Array.prototype</code> 上的原生filter方法，但是函数签名是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ramda.filter = curry(function(predicate, list) &#123;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>所以我们已经柯里化过了，只需要传递 <code>predicate</code> 参数，并且前一步的tasks列表不需要。（我告诉过你所有的东西已经被柯里化了，没有吗？）</p>
+<p>我们对于 <code>propEq(&#39;complete&#39;, true) -&gt; reject</code> 跟 <code>propEq(&#39;username&#39;, membername) -&gt;</code> 做了同样的事情。<code>filter.Reject</code> 跟 <code>filter</code> 是一样的，除了它会反转语义。它只保留哪些 <code>predicate</code> 返回 <code>false</code>的值。</p>
+<p>好了，你还在读吗？我们手指都累了。（真的要学学touch-type了）你真的不需要我来解释最后两行了，对吧？真的？你确定？好吧，好吧！是的！…是的，我说过我会的！</p>
+<p>所以接下来我们看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">R.pick([&apos;id&apos;, &apos;dueDate&apos;, &apos;title&apos;, &apos;priority&apos;])</span><br></pre></td></tr></table></figure>
+<p><code>pick</code> 接收一个属性名数组和一个对象，并且返回一个新的对象，这个对象会把原来的属性拷贝过来。因为我们只传递了属性名，我们只要给它传递一个对象，就能得到一个会返回新对象的方法。这个方法被传递给 <code>R.map</code> 函数。跟 <code>filter</code> 一样，跟原生方法的版本工作方式相同，但是函数签名不同：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ramda.map = curry(function(fn, list) &#123; /* ... */ &#125;);</span><br></pre></td></tr></table></figure>
+<p>这里再多嘴一下 – 我已经说过我很乏味 – 这个方法已经柯里化过了，因为我们只是传递了 <code>pick</code> 函数（柯里化后）的输出，而不是列表，<code>then</code> 会调用使用tasks列表调用这个方法。</p>
+<p>好啦，记得坐在学校教室等待下课？钟表上的分针卡住了，秒针像是被糖蜜粘住了吗？老师成天唠叨一遍又一遍同样的事情。还记得吗？然后也许就是两分钟要结束前那一刻，结束尽在眼前：哈利路亚！我想这个例子完了之后我们就到了，就剩这个了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.then(R.sortBy(R.get(&apos;dueDate&apos;)));</span><br></pre></td></tr></table></figure>
+<p>我们已经说过 <code>get</code> 方法了．就像这样柯里化之后，它返回一个方法，这个方法接受一个对象并且返回 <code>dueDate</code> 属性．我们把它传递给 <code>sortBy</code> 方法，这个方法接收一个列表并且基于方法返回值对这个列表元素排序．但是，等等，我们没有列表，对吧？当然没有，我们又柯里化了．但是当我们被 <code>.then()</code> 方法调用的时候，它会接收这个列表，把每个对象传递给 <code>get</code> 方法并且基于结果排序．</p>
+<h1 id="所以柯里化有多重要？"><a href="#所以柯里化有多重要？" class="headerlink" title="所以柯里化有多重要？"></a>所以柯里化有多重要？</h1><p>这个例子展示了 <code>Ramda</code> 的工具方法跟 <code>Ramda</code> 柯里化版本．也许柯里化并没有那么重要．让我们来在没有柯里化的情况下重写:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">var getIncompleteTaskSummaries = function(membername) &#123;</span><br><span class="line">    return fetchData()</span><br><span class="line">        .then(function(data) &#123;</span><br><span class="line">            return R.get(&apos;tasks&apos;, data)</span><br><span class="line">        &#125;)</span><br><span class="line">        .then(function(tasks) &#123;</span><br><span class="line">            return R.filter(function(task) &#123;</span><br><span class="line">                return R.propEq(&apos;username&apos;, membername, task)</span><br><span class="line">            &#125;, tasks)</span><br><span class="line">         &#125;)</span><br><span class="line">        .then(function(tasks) &#123;</span><br><span class="line">            return R.reject(function(task) &#123;</span><br><span class="line">                return R.propEq(&apos;complete&apos;, true, task);</span><br><span class="line">            &#125;, tasks)</span><br><span class="line">        &#125;)</span><br><span class="line">        .then(function(tasks) &#123;</span><br><span class="line">            return R.map(function(task) &#123;</span><br><span class="line">                return R.pick([&apos;id&apos;, &apos;dueDate&apos;, &apos;title&apos;, &apos;priority&apos;], task);</span><br><span class="line">            &#125;, tasks);</span><br><span class="line">        &#125;)</span><br><span class="line">        .then(function(abbreviatedTasks) &#123;</span><br><span class="line">            return R.sortBy(function(abbrTask) &#123;</span><br><span class="line">                return R.get(&apos;dueDate&apos;, abbrTask);</span><br><span class="line">            &#125;, abbreviatedTasks);</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>我想其实是等价的．它也比原始的代码要好．<code>Ramda</code> 的工具方法有些，额，功用，甚至在柯里化的版本中．但是我不认为它比下面的版本可读性更好:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var getIncompleteTaskSummaries = function(membername) &#123;</span><br><span class="line">    return fetchData()</span><br><span class="line">        .then(R.get(&apos;tasks&apos;))</span><br><span class="line">        .then(R.filter(R.propEq(&apos;username&apos;, membername)))</span><br><span class="line">        .then(R.reject(R.propEq(&apos;complete&apos;, true)))</span><br><span class="line">        .then(R.map(R.pick([&apos;id&apos;, &apos;dueDate&apos;, &apos;title&apos;, &apos;priority&apos;])))</span><br><span class="line">        .then(R.sortBy(R.get(&apos;dueDate&apos;)));</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>所以这就是我们柯里化的原因．</p>
+<hr>
+<p>到这里课程结束了．</p>
+<p>我确实警告过你．</p>
+<p>下次，当我告诉你读其他人的文章而不是我的的时候，你要注意了，对吧？跟我写的比这些都有些过时了，但是他们仍然写得很好，并且你可以看看:</p>
+<ul>
+<li><a href="http://hughfdjackson.com/javascript/why-curry-helps/" target="_blank" rel="noopener">为什么柯里化有帮助</a>, Hugh FD Jackson</li>
+<li><a href="http://www.youtube.com/watch?v=m3svKOdZijA" target="_blank" rel="noopener">Underscore，你做错了</a>, Dr. Boolean, aka Brian Lonsdorf</li>
+</ul>
+<p>有个新的，我今天才看到．我们会看到它是否能够经受起时间的检验，但是当下它值得一读:</p>
+<ul>
+<li><a href="https://glebbahmutov.com/blog/put-callback-first-for-elegance/" target="_blank" rel="noopener">为了优雅重视回调</a>, Gleb Bahmutov</li>
+</ul>
+<h1 id="一个小秘密"><a href="#一个小秘密" class="headerlink" title="一个小秘密"></a>一个小秘密</h1><p>柯里化的确很强大，但是不足以让你的代码优雅．</p>
+<p>有三个重要的元素:</p>
+<ul>
+<li><a href="http://fr.umio.us/why-ramda/" target="_blank" rel="noopener">之前</a>我谈过函数组合．这在你把所有美妙的想法组装在一起而不想写丑陋的胶水代码时非常必要．</li>
+<li><strong>柯里化</strong> 很有用，既因为它需要支持组合，同时因为它把大量的样板代码去除了，正如你上面看到的．</li>
+<li>一组工具方法操作有用的数据结构，例如对象列表．</li>
+</ul>
+<p><a href="https://github.com/ramda/ramda" target="_blank" rel="noopener">Ramda</a> 其中一个目标就是要通过方便的包装来提供所有这些．</p>
+
+    
+  </div>
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持vincenthou</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="//vdemo.qiniudn.com/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            <img src="//vdemo.qiniudn.com/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/01/24/ES6编程cheat-sheet/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2017/06/18/前端的数据和状态管理/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'vincenthou';
+    
+    var disqus_url = 'https://vincenthou.github.io/2017/06/17/【翻译】有帮助的柯里化/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//vincenthou.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

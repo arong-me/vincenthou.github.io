@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <link rel="dns-prefetch" href="//vdemo.qiniudn.com">
+  <link rel="dns-prefetch" href="//user-images.githubusercontent.com">
+  
+  <title>Node学习指南 | VincentHou</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="todo,backend,node.js,">
+  
+
+  <meta name="description" content="基础入门教程 七天学会NodeJS: http://nqdeng.github.io/7-days-nodejs Node.js 包教不包会: https://github.com/alsotang/node-lessons ECMAScript 6入门: http://es6.ruanyifeng.com/ Practical Node.js: https://github.com/azat-c">
+<meta name="keywords" content="todo,backend,node.js">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Node学习指南">
+<meta property="og:url" content="https://vincenthou.github.io/2017/09/01/Node学习指南/index.html">
+<meta property="og:site_name" content="VincentHou">
+<meta property="og:description" content="基础入门教程 七天学会NodeJS: http://nqdeng.github.io/7-days-nodejs Node.js 包教不包会: https://github.com/alsotang/node-lessons ECMAScript 6入门: http://es6.ruanyifeng.com/ Practical Node.js: https://github.com/azat-c">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-04-18T12:59:05.435Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Node学习指南">
+<meta name="twitter:description" content="基础入门教程 七天学会NodeJS: http://nqdeng.github.io/7-days-nodejs Node.js 包教不包会: https://github.com/alsotang/node-lessons ECMAScript 6入门: http://es6.ruanyifeng.com/ Practical Node.js: https://github.com/azat-c">
+
+  
+
+  
+    <link rel="icon" href="//assets-cdn.github.com/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-39656503-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?1e5d8068abdfb22e27ebe052a4feae14";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">更多</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">更多</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基础入门"><span class="toc-text">基础入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#教程"><span class="toc-text">教程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#进阶"><span class="toc-text">进阶</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#订阅"><span class="toc-text">订阅</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#面试"><span class="toc-text">面试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#收集"><span class="toc-text">收集</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-Node学习指南" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">Node学习指南</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.09.01</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Vincent Hou</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://vincenthou.github.io/2017/09/01/Node学习指南/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="基础入门"><a href="#基础入门" class="headerlink" title="基础入门"></a>基础入门</h1><h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><ul>
+<li><strong>七天学会NodeJS:</strong> <a href="http://nqdeng.github.io/7-days-nodejs" target="_blank" rel="noopener">http://nqdeng.github.io/7-days-nodejs</a></li>
+<li><strong>Node.js 包教不包会:</strong> <a href="https://github.com/alsotang/node-lessons" target="_blank" rel="noopener">https://github.com/alsotang/node-lessons</a></li>
+<li><strong>ECMAScript 6入门:</strong> <a href="http://es6.ruanyifeng.com/" target="_blank" rel="noopener">http://es6.ruanyifeng.com/</a></li>
+<li><strong>Practical Node.js:</strong> <a href="https://github.com/azat-co/practicalnode" target="_blank" rel="noopener">https://github.com/azat-co/practicalnode</a></li>
+<li><strong>Node的哲学:</strong> <a href="https://github.com/maxogden/art-of-node" target="_blank" rel="noopener">https://github.com/maxogden/art-of-node</a></li>
+</ul>
+<h1 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h1><ul>
+<li><strong>Node Stream:</strong> <a href="https://github.com/substack/stream-handbook" target="_blank" rel="noopener">https://github.com/substack/stream-handbook</a></li>
+<li><strong>deep-into-node:</strong> <a href="https://github.com/yjhjstz/deep-into-node" target="_blank" rel="noopener">https://github.com/yjhjstz/deep-into-node</a></li>
+<li><strong>streamify your node program:</strong> <a href="https://github.com/zoubin/streamify-your-node-program" target="_blank" rel="noopener">https://github.com/zoubin/streamify-your-node-program</a></li>
+</ul>
+<h1 id="订阅"><a href="#订阅" class="headerlink" title="订阅"></a>订阅</h1><ul>
+<li><strong>Node Weekly:</strong> <a href="https://nodeweekly.com/issues/203" target="_blank" rel="noopener">https://nodeweekly.com/issues/203</a></li>
+</ul>
+<h1 id="面试"><a href="#面试" class="headerlink" title="面试"></a>面试</h1><ul>
+<li><strong>Node.js面试题，侧重后端应用与对Node核心的理解:</strong> <a href="https://github.com/jimuyouyou/node-interview-questions" target="_blank" rel="noopener">https://github.com/jimuyouyou/node-interview-questions</a></li>
+<li><strong>Eleme Node Interview:</strong> <a href="https://github.com/ElemeFE/node-interview" target="_blank" rel="noopener">https://github.com/ElemeFE/node-interview</a></li>
+</ul>
+<h1 id="收集"><a href="#收集" class="headerlink" title="收集"></a>收集</h1><ul>
+<li><strong>node.js中文资料导航:</strong> <a href="https://github.com/youyudehexie/node123" target="_blank" rel="noopener">https://github.com/youyudehexie/node123</a></li>
+</ul>
+
+    
+  </div>
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持vincenthou</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="//vdemo.qiniudn.com/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            <img src="//vdemo.qiniudn.com/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/09/01/认识WebAssembly/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2017/09/04/Python学习指南/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'vincenthou';
+    
+    var disqus_url = 'https://vincenthou.github.io/2017/09/01/Node学习指南/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//vincenthou.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

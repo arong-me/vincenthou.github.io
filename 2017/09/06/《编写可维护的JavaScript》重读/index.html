@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <link rel="dns-prefetch" href="//vdemo.qiniudn.com">
+  <link rel="dns-prefetch" href="//user-images.githubusercontent.com">
+  
+  <title>《编写可维护的JavaScript》重读 | VincentHou</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="blog,javascript,reading,">
+  
+
+  <meta name="description" content="原书豆瓣地址: https://book.douban.com/subject/21792530/  根据原书目录结构组织，带有自己的理解和解读。 编程风格这部分内容适用于所有的变成语言，推荐一本代码的整洁之道，虽然内容是面向Java的，但是里面的代码书写思想是具有普遍实用性的。本书主要是对于一些定义规范或者作者总结最佳实践的解释，说明意义和价值，最后展示了一整套工具链，将对于规范的检查整合到开发">
+<meta name="keywords" content="blog,javascript,reading">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《编写可维护的JavaScript》重读">
+<meta property="og:url" content="https://vincenthou.github.io/2017/09/06/《编写可维护的JavaScript》重读/index.html">
+<meta property="og:site_name" content="VincentHou">
+<meta property="og:description" content="原书豆瓣地址: https://book.douban.com/subject/21792530/  根据原书目录结构组织，带有自己的理解和解读。 编程风格这部分内容适用于所有的变成语言，推荐一本代码的整洁之道，虽然内容是面向Java的，但是里面的代码书写思想是具有普遍实用性的。本书主要是对于一些定义规范或者作者总结最佳实践的解释，说明意义和价值，最后展示了一整套工具链，将对于规范的检查整合到开发">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://user-images.githubusercontent.com/1998742/30109878-97c0dd7c-933a-11e7-80b3-58fd485e989e.png">
+<meta property="og:updated_time" content="2020-04-18T12:59:05.435Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《编写可维护的JavaScript》重读">
+<meta name="twitter:description" content="原书豆瓣地址: https://book.douban.com/subject/21792530/  根据原书目录结构组织，带有自己的理解和解读。 编程风格这部分内容适用于所有的变成语言，推荐一本代码的整洁之道，虽然内容是面向Java的，但是里面的代码书写思想是具有普遍实用性的。本书主要是对于一些定义规范或者作者总结最佳实践的解释，说明意义和价值，最后展示了一整套工具链，将对于规范的检查整合到开发">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/1998742/30109878-97c0dd7c-933a-11e7-80b3-58fd485e989e.png">
+
+  
+
+  
+    <link rel="icon" href="//assets-cdn.github.com/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-39656503-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?1e5d8068abdfb22e27ebe052a4feae14";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">更多</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">更多</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#编程风格"><span class="toc-text">编程风格</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本的格式化"><span class="toc-text">基本的格式化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注释"><span class="toc-text">注释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#语句和表达式"><span class="toc-text">语句和表达式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变量、函数和运算符"><span class="toc-text">变量、函数和运算符</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#编程实践"><span class="toc-text">编程实践</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#UI层的松耦合"><span class="toc-text">UI层的松耦合</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#避免使用全局变量"><span class="toc-text">避免使用全局变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#事件处理"><span class="toc-text">事件处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#避免空比较"><span class="toc-text">避免空比较</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#将配置数据从代码中分离出来"><span class="toc-text">将配置数据从代码中分离出来</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#抛出自定义错误"><span class="toc-text">抛出自定义错误</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#不是你的对象不要动"><span class="toc-text">不是你的对象不要动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#浏览器嗅探"><span class="toc-text">浏览器嗅探</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#自动化"><span class="toc-text">自动化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#文件和目录接口"><span class="toc-text">文件和目录接口</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ant"><span class="toc-text">Ant</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#校验"><span class="toc-text">校验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件合并和加工"><span class="toc-text">文件合并和加工</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件精简和压缩"><span class="toc-text">文件精简和压缩</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文档化"><span class="toc-text">文档化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#自动化测试"><span class="toc-text">自动化测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#组装到一起"><span class="toc-text">组装到一起</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-《编写可维护的JavaScript》重读" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">《编写可维护的JavaScript》重读</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2017.09.06</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Vincent Hou</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://vincenthou.github.io/2017/09/06/《编写可维护的JavaScript》重读/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <p>原书豆瓣地址: <a href="https://book.douban.com/subject/21792530/" target="_blank" rel="noopener">https://book.douban.com/subject/21792530/</a></p>
+<p><img src="https://user-images.githubusercontent.com/1998742/30109878-97c0dd7c-933a-11e7-80b3-58fd485e989e.png" alt="image"></p>
+<p>根据原书目录结构组织，带有自己的理解和解读。</p>
+<h1 id="编程风格"><a href="#编程风格" class="headerlink" title="编程风格"></a>编程风格</h1><p>这部分内容适用于所有的变成语言，推荐一本<a href="https://book.douban.com/subject/5442024/" target="_blank" rel="noopener">代码的整洁之道</a>，虽然内容是面向Java的，但是里面的代码书写思想是具有普遍实用性的。本书主要是对于一些定义规范或者作者总结最佳实践的解释，说明意义和价值，最后展示了一整套工具链，将对于规范的检查整合到开发流程当中。<br>本书的作者也是著名<a href="https://book.douban.com/subject/10546125/" target="_blank" rel="noopener">红包书</a>的作者<a href="https://github.com/nzakas" target="_blank" rel="noopener">Nicholas C. Zakas</a>，本书的思想和实践最后汇聚成了著名的开源工具<a href="https://github.com/eslint/eslint" target="_blank" rel="noopener">ESLint</a>。</p>
+<h2 id="基本的格式化"><a href="#基本的格式化" class="headerlink" title="基本的格式化"></a>基本的格式化</h2><p>主要集中在代码的排版，命名，和变量声明方式上。有意思的点在于 <code>null 和 undefined的区别</code>。<code>undefined</code> 变量未定义或者没有初始化（可能是任意类型），而 <code>null</code>显示指定了当前变量是一个object只是值为null</p>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><p>主要是单行注释和多行注释的写法，还有就是什么时候应该有注释，毕竟我们的目标是代码自解释。有关于注释的标准写法，主要可以参考<a href="https://github.com/jsdoc3/jsdoc" target="_blank" rel="noopener">JSDoc</a>的写法，特别是在写给第三方使用的SDK时，通过使用这种标准的注释写法可以自动生成SDK的文档。这些注释就变成了接口的元信息，个人感觉这也是注解（在JS中叫decorator）的想法来源。</p>
+<p>作者认为在以下三种情况下需要使用注释:</p>
+<ol>
+<li>难以理解的代码</li>
+<li>可能被误认为错误的代码</li>
+<li>特殊的hack</li>
+</ol>
+<p>整理起来其实就是容易让人产生 <strong>二义性</strong> 而导致错误的地方就需要加注释。</p>
+<h2 id="语句和表达式"><a href="#语句和表达式" class="headerlink" title="语句和表达式"></a>语句和表达式</h2><p>主要是所有语言都有的，还是JS特有的语句块排版方式定义。作者描述了针对特定语句块或者表达式的多种排版方式，也给出了自己的倾向。其实这种事情，没有绝对正确，但是所有人应该保持统一（这个就要工具来实现了）。</p>
+<h2 id="变量、函数和运算符"><a href="#变量、函数和运算符" class="headerlink" title="变量、函数和运算符"></a>变量、函数和运算符</h2><p>主要说明了变量、函数的声明方式，JS中的相等判断大坑。这里面比较有意思的地方在于提到了 <strong>严格模式</strong>。</p>
+<p>严格模式是在 <strong>ES5</strong> 中引入的，目的在于通过这种方式告诉解析引擎谨慎解析和执行JS，以减少错误．”ｕse strict”可以用于全局和局部，一个好的方式是通过IIFE包裹严格模式指令．</p>
+<h1 id="编程实践"><a href="#编程实践" class="headerlink" title="编程实践"></a>编程实践</h1><h2 id="UI层的松耦合"><a href="#UI层的松耦合" class="headerlink" title="UI层的松耦合"></a>UI层的松耦合</h2><p>前端的代码一直有这样的职能划分：HTML负责页面或者组件的骨架，CSS 负责页面或者组件的表现，JS 负责页面或者组件的行为．我们也一直是这样践行着这一信条的，直到<a href="https://github.com/facebook/react" target="_blank" rel="noopener">React</a>的出现．我觉得这种原教旨主义的打破也体现了优雅性向实用性的妥协，这是另一个话题，我们单从我们的宗教信仰来说．</p>
+<p>所谓松耦合，其实就是在我们需要做出改动或者调整的时候，影响面能够足够小，最好的情况就是改动只会影响到需要被改变的部分，也是最少知识原则的体现．作者提到了一些范式，整理如下:</p>
+<ol>
+<li>将 JS 从 CSS 中抽离：禁止 CSS 表达式（这个的确很神奇，至今也没有用过），例如 <code>expression(document.body.offsetWidth + &#39;px&#39;)</code></li>
+<li>将 CSS 从 JS 中抽离：不要直接通过style来操作元素的样式，而是通过样式切换，使用 <code>className += &#39;  foo&#39;</code>，或者 <code>classList.add(&#39;foo&#39;)</code>，还有其他DOM库提供的 <code>addClass</code> 方法</li>
+<li>将 JS 从 HTML 中抽离：不要直接在HTML里面使用onxxx，而是在 JS 文件中通过API选择 DOM 元素，在元素上通过 <code>addEventListener</code> 来绑定事件，这里作者主要是从作为外部文件，onxx 的回调方法可能还没有加载过来</li>
+<li>将 HTML 从 JS 中抽离：不要在 JS 中直接通过字符串拼接来生成模板然后再用 innerHTML 设置进去（之前就这么干过…），通过异步加载再通过 innerHTML 设置或者通过客户端模板来实现，例如<a href="https://github.com/wycats/handlebars.js/" target="_blank" rel="noopener">handlebars</a>, <a href="https://github.com/janl/mustache.js" target="_blank" rel="noopener">mustache</a>, <a href="https://github.com/lhywork/artTemplate" target="_blank" rel="noopener">artTemplate</a></li>
+</ol>
+<h2 id="避免使用全局变量"><a href="#避免使用全局变量" class="headerlink" title="避免使用全局变量"></a>避免使用全局变量</h2><p>全局变量最大的问题就是带来了应用状态的不确定性，这个点在于程序逻辑任何的部分都可以任意修改全局的变量，互相的依赖关系就会造成程序运行状态的混乱．所以可以通过单全局变量或者零全局变量．React+Redux 在于虽然共享了同一个store，但是是通过每个reducer产生新的子状态，再通过reduce将子状态合并更新．</p>
+<ul>
+<li>单全局变量：使用命名空间，或者AMD（曾经也有过CMD，现在是CommonJS或者ESM）</li>
+<li>零全局变量：使用IIFE包裹实现隔离（在ES6有了let和const，也不再只有函数级作用域，跟标准的块级作用域接上了轨）</li>
+</ul>
+<h2 id="事件处理"><a href="#事件处理" class="headerlink" title="事件处理"></a>事件处理</h2><p>这里作者主要想说应该将应用逻辑和事件处理逻辑拆分开，这点在现在vue, react, angular盛行的时代也是有价值的．其实就是业务逻辑只处理数据，而事件处理这种依赖于环境的东西（event是什么结果，有哪些属性啊这种问题）是要拆分开的．在业务层只关心业务数据，而不需要把环境依赖的参数层层传递（例如event）</p>
+<h2 id="避免空比较"><a href="#避免空比较" class="headerlink" title="避免空比较"></a>避免空比较</h2><p>其实这个坑在于 JS 的弱类型特性，针对不同的类型有不同的判断方式：</p>
+<ul>
+<li>对于原始值类型，你做比较的时候首先需要明确被判断的变量类型（通过 typeof）,这个判断是显著有效的（字符串，数字，布尔值还有undefined）</li>
+<li>对于引用类型的变量就需要借助 instanceof 运算符了</li>
+<li>针对内置的类（Object, Array, Function, Error, Date, RegExp）直接运算构造器字面量，这个运算符对于通过原型链继承的子类判断也是有效的（每个对象 instanceof Ojbect都是true）</li>
+<li>对于数组的检测，可以根据实例上的sort方式是否是一个function判断，更保险的是通过toString方法跟 “[object Array]”判等，现在ES5的支持度可以放心使用 <code>Array.isArray</code> 方法（哪怕是老的浏览器，也推荐先特性检测一下，再用老方法）</li>
+<li>对于对象的属性判断，最好的方法是是哟个 <code>in</code> 运算符，除了本身实例上的属性，这个运算符还会判断继承自对象原型的属性，针对实例本身属性的判断就使用 <code>hasOwnProperty</code> 方法</li>
+</ul>
+<h2 id="将配置数据从代码中分离出来"><a href="#将配置数据从代码中分离出来" class="headerlink" title="将配置数据从代码中分离出来"></a>将配置数据从代码中分离出来</h2><p>配置信息就是全局引用的常量值，通过分离保存为独立文件可以统一维护（single source of data），配置的信息不一定要以程序直接可以使用的形式存储（例如 JS 对象或者 JSON 数据），可以通过构建工具来转换．例如使用<a href="https://github.com/nzakas/props2js" target="_blank" rel="noopener">props2js</a></p>
+<h2 id="抛出自定义错误"><a href="#抛出自定义错误" class="headerlink" title="抛出自定义错误"></a>抛出自定义错误</h2><p>应用程序中存在一定的约束规则，在运行中当出现了偏离这些约束规则时就会导致错误．除了内置的错误类型（Error, EvalError, RangeError, ReferenceError, SyntaxError, TypeError, URIError），可以通过原型继承的方式扩展 Error 类，通过 instanceof 运算符判断 catch 到的 Error 类型</p>
+<h2 id="不是你的对象不要动"><a href="#不是你的对象不要动" class="headerlink" title="不是你的对象不要动"></a>不是你的对象不要动</h2><p>由于 JS 在运行环境中没有对内置类型或者已存在的 JS 对象做任何默认的 readonly 的限制，例如：</p>
+<ul>
+<li>原生对象（Object、Array等等）</li>
+<li>DOM对象（例如 document）</li>
+<li>浏览器对象模型（BOM）对象（例如 window）</li>
+<li>类库的对象</li>
+</ul>
+<p>针对这些对象，遵循下面的原则：</p>
+<ul>
+<li>不覆盖方法</li>
+<li>不新增方法（Prototype的反例）</li>
+<li>不删除方法</li>
+</ul>
+<p>更好的扩展方式：</p>
+<ul>
+<li>基于对象的继承（使用Object.create(obj. {prop: value}) 实现extend的效果，不过这个是浅拷贝）</li>
+<li>基于类型的继承（通过构造函数实现而不是对象，所以需要访问被继承对象的构造函数）</li>
+<li>门面模式（例如jQuery）</li>
+</ul>
+<p>通过使用 polyfill 可以在当下使用未来标准定义但是浏览器尚未实现的功能。为了弥补对于对象修改没有默认限制的特性，ES5中引入了一个方法防止对于对象的修改，每个级别都存在两种方法，一个方法用来实施操作，一个方式用来检测操作是否应用。</p>
+<ul>
+<li>防止扩展：禁止为对象添加属性和方法，但是已存在的属性和方法是可以被修改或者删除的，<code>Object.preventExtension</code>，<code>Object.isExtensible</code></li>
+<li>密封：类似“防止扩展”，同时禁止了对对象中已存在的属性和方法的删除，<code>Object.seal</code>，<code>Object.isSealed</code></li>
+<li>冻结：类似“密封”，同时禁止了对对象中已存在的属性和方法的修改（所有字段均只读），<code>Object.freeze</code>，<code>Object.isFrozen</code></li>
+</ul>
+<h2 id="浏览器嗅探"><a href="#浏览器嗅探" class="headerlink" title="浏览器嗅探"></a>浏览器嗅探</h2><p>浏览器的兼容性永远是个绕不开的大坑，针对不同的浏览器，我们需要在代码中检测运行环境对于标准定义API的支持情况就需要一些运行环境的检测手段，主要有两个：</p>
+<ul>
+<li>UA检测：可以使用<a href="https://github.com/fex-team/userAgent" target="_blank" rel="noopener">userAgent</a></li>
+<li>特性检测：可以使用<a href="https://github.com/Modernizr/Modernizr" target="_blank" rel="noopener">Modernizr</a></li>
+</ul>
+<p>有时候为了方便，我们很容易会去利用特性推断（运行环境支持A接口，就一定会支持B接口）和浏览器推断（运行环境支持某个接口就认为当前是在某种浏览器中）</p>
+<h1 id="自动化"><a href="#自动化" class="headerlink" title="自动化"></a>自动化</h1><p>作者列举了一些利弊，但是现在看来那些弊端已经不存在了，前端自动化作为工程化的一部分，基本已经变成了标配。</p>
+<h2 id="文件和目录接口"><a href="#文件和目录接口" class="headerlink" title="文件和目录接口"></a>文件和目录接口</h2><p>作者总结了一些最佳实践的原则</p>
+<ul>
+<li>一个文件只包含一个对象：单一责任，让修改的粒度足够小</li>
+<li>相关文件用目录分组：基于模块来划分（一个模块中可以同时包含模板，样式和行为）</li>
+<li>保证第三方代码的独立：例如独立放在一个<code>vendor</code>或者<code>lib</code>目录，现在有了npm的包管理机制都是放在<code>node_modules</code>中（曾经前端项目也有bower_components的阶段）</li>
+<li>确定build文件目录：这个目录一般是<code>.gitkeep</code>或者是直接不提交上去的（使用.gitignore忽略）</li>
+<li>保持测试代码的完整性：保留一个<code>test</code>目录存放测试用例代码（包含单元测试，E2E测试）</li>
+</ul>
+<p>作者i列举了几个知名项目的项目结构（现在也大大不一样了），包括<a href="https://github.com/jquery/jquery" target="_blank" rel="noopener">jquery</a>，<a href="https://github.com/dojo/dojo" target="_blank" rel="noopener">dojo</a>，<a href="https://github.com/yui/yui3" target="_blank" rel="noopener">yui3</a>。下面是我总结的一个前端项目的目录结构</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">├── build					//构建工具（grunt, gulp, webpack脚本）</span><br><span class="line">├── ci						//CI执行用到的脚本</span><br><span class="line">│   └── lint.sh</span><br><span class="line">├── config					//应用运行时的全局配置文件（如果里面分模块，也会存在模块内的配置）</span><br><span class="line">├── dist					//通过构建工具生成的静态部署文件</span><br><span class="line">├── doc					//代码，开发规范，组件文档定义，说明性文档（测试，构建过程，开发流程，API文档），作为SDK的JSDoc文档</span><br><span class="line">├── docker					//作为docker实例部署时候的nginx配置和dockerfile定义</span><br><span class="line">│   └── nginx</span><br><span class="line">│       ├── conf</span><br><span class="line">│       │   └── site.conf</span><br><span class="line">│       ├── Dockerfile</span><br><span class="line">│       └── start.sh</span><br><span class="line">├── node_modules			//第三方依赖管理（也可以手工维护vendor，现代化项目都是用npm管理）</span><br><span class="line">├── package.json			//包含项目元信息，包管理信息，脚本信息（npm scripts）</span><br><span class="line">├── README.md			//项目介绍文档，包含sceencast，在线演示地址，本地运行步骤，技术栈说明</span><br><span class="line">├── src						//程序源代码目录（几乎所有的主要项目代码）</span><br><span class="line">│   ├── component			//自定义组件库</span><br><span class="line">│   ├── index.html			//入口页</span><br><span class="line">│   ├── main.js				//入口脚本</span><br><span class="line">│   ├── module				//基于模块划分的结构</span><br><span class="line">│   │   └── account</span><br><span class="line">│   ├── page				//第一层级页面</span><br><span class="line">│   │   └── home			//某个页面（包含模版，样式和行为）</span><br><span class="line">│   │       ├── home.css</span><br><span class="line">│   │       ├── home.html</span><br><span class="line">│   │       └── home.js</span><br><span class="line">│   ├── router.js			//前端路由定义</span><br><span class="line">│   ├── store				//前端状态管理（可选，react一般是redux，vue一般是vuex）</span><br><span class="line">│   │   ├── action.js</span><br><span class="line">│   │   ├── index.js</span><br><span class="line">│   │   └── reducer.js</span><br><span class="line">│   └── util					//自定义可复用工具库</span><br><span class="line">├── static					//静态资源文件（数据，图片，字体）</span><br><span class="line">│   ├── data</span><br><span class="line">│   ├── font</span><br><span class="line">│   └── image</span><br><span class="line">└── test					//测试相关（单元测试，E2E测试）</span><br></pre></td></tr></table></figure>
+<h2 id="Ant"><a href="#Ant" class="headerlink" title="Ant"></a>Ant</h2><p>我自己最开始接触前端构建的时候也是用的这个，因为有Java开发的经验，当时还没有现在那么多概念，就是觉得像压缩打包这种事情正好可以通过这个任务管理器完成就用起来了。随着 nodejs 的发展，前端有了自己的武器，跟 Ant 对标的就是 grunt, gulp（不是webpack，因为他是个bundler，而<a href="https://github.com/fex-team/fis3" target="_blank" rel="noopener">fis3</a>是前端工程解决方案）这样的task runner。</p>
+<h2 id="校验"><a href="#校验" class="headerlink" title="校验"></a>校验</h2><p>原书主要是 Ant 中如何配置使用 JSHint，现在可以换成在 webpack 里面用 ESLint 了</p>
+<h2 id="文件合并和加工"><a href="#文件合并和加工" class="headerlink" title="文件合并和加工"></a>文件合并和加工</h2><p>grunt 和 gulp 有很多这样的 task，当然也可以直接使用 npm scripts。</p>
+<h2 id="文件精简和压缩"><a href="#文件精简和压缩" class="headerlink" title="文件精简和压缩"></a>文件精简和压缩</h2><p>原文介绍了 <a href="https://github.com/yui/yuicompressor" target="_blank" rel="noopener">YUI Compressor</a>，<a href="https://developers.google.com/closure/compiler/" target="_blank" rel="noopener">Closure Complier</a>以及 <a href="https://github.com/mishoo/UglifyJS" target="_blank" rel="noopener">UglifyJS</a>这些代码 <strong>精简工具</strong>，现在主要就是用最后一个了。对于代码的压缩主要使用 gzip 压缩，而 gzip 压缩分为构建时压缩和运行时压缩。构建时压缩用<a href="https://github.com/beatgammit/gzip-js" target="_blank" rel="noopener">gzip-js</a>或者gup task: <a href="https://github.com/jstuckey/gulp-gzip" target="_blank" rel="noopener">gulp-gzip</a>。运行时压缩在web容器（nginx, apache）中配置HTTP的响应 <code>Content-Encoding: gzip</code>（首先客户端 request 要包含 <code>Accept-Encoding: gzip, deflate</code>）</p>
+<h2 id="文档化"><a href="#文档化" class="headerlink" title="文档化"></a>文档化</h2><p>现在主流就是使用<a href="https://github.com/jsdoc3/jsdoc" target="_blank" rel="noopener">JSDoc</a>，原书作者也介绍了雅虎的<a href="https://github.com/yui/yuidoc" target="_blank" rel="noopener">YUI Doc</a>（话说作者作为雅虎的架构师，本书很多工具都是YUI体系的）</p>
+<h2 id="自动化测试"><a href="#自动化测试" class="headerlink" title="自动化测试"></a>自动化测试</h2><p>原书作者提到的YUI Test Selenium，<a href="https://github.com/yui/yeti" target="_blank" rel="noopener">Yeti</a>，JsTestDriver都已经很久未更了，<a href="https://github.com/ariya/phantomjs" target="_blank" rel="noopener">PhantomJS</a>也因为 Chrome Headless 的官方支持也停止维护了，现在可以玩这个<a href="https://github.com/GoogleChrome/puppeteer" target="_blank" rel="noopener">puppeteer</a>。</p>
+<h2 id="组装到一起"><a href="#组装到一起" class="headerlink" title="组装到一起"></a>组装到一起</h2><p>这里主要是在说整个代码的上线流程通过 Ant 自动化，包含了开发，集成和部署，通过CI工具的整合，现在这个流程的集成变得更加轻松自然。代码在本地开发完成之后push到远端，经过一系列的CI任务（一般是Jenkins，开源领域有<a href="https://www.travis-ci.org/" target="_blank" rel="noopener">TravisCI</a>和<a href="https://circleci.com/" target="_blank" rel="noopener">CircleCI</a>）之后生成一个构建的版本，这个构建可以是周期性的（集成版本），也可以是按需的（发布版本）。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>随着nodejs的兴起，很多的前端工具如雨后春笋般涌现出来，之前依赖于其他语言或者平台的工具用 JS 又重写了一遍，很多之前无法实现的需求随着技术的演进也逐渐变成了可能，但是本书仍然有很多借鉴意义，作为一本经典书籍，书中不仅介绍了可维护的代码应该怎么写，其实也蕴含了一些早期的前端工程化思想，文中的一些概念仍然有现实指导意义。<br>提炼一下，好的 JS 代码遵循下面几个原则</p>
+<ul>
+<li>可预见性(Predictability)</li>
+<li>隔离性(Isolation)</li>
+<li>松耦合性(Loose Coupling)</li>
+</ul>
+<p>这些原则也是可以通过lint工具进一步约束，这也就产生了大名鼎鼎的<a href="https://github.com/eslint/eslint" target="_blank" rel="noopener">ESLint</a></p>
+
+    
+  </div>
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持vincenthou</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="//vdemo.qiniudn.com/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            <img src="//vdemo.qiniudn.com/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2017/09/06/对AMP的理解和实践/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2017/09/07/h5页面动效开发案例/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'vincenthou';
+    
+    var disqus_url = 'https://vincenthou.github.io/2017/09/06/《编写可维护的JavaScript》重读/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//vincenthou.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>

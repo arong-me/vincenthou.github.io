@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+
+
+  <html class="light page-post">
+
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <link rel="dns-prefetch" href="//vdemo.qiniudn.com">
+  <link rel="dns-prefetch" href="//user-images.githubusercontent.com">
+  
+  <title>开发工具库 | VincentHou</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+    <meta name="keywords" content="frontend,collection,">
+  
+
+  <meta name="description" content="功能型 FileSaver.js: 通过创建blob对象在前端另存为 jsPDF: 前端专业生成PDF FileAPI：各种（文本，图片）文件多方式（批量，拖拽）上传 qrcodejs：二维码生成器 dayjs: 日期格式化，moment的light版 clipboard.js: 拷贝到剪切板 js-xlsx：前端保存为excel1var workbook = XLSX.utils.table_t">
+<meta name="keywords" content="frontend,collection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="开发工具库">
+<meta property="og:url" content="https://vincenthou.github.io/2019/10/04/开发工具库/index.html">
+<meta property="og:site_name" content="VincentHou">
+<meta property="og:description" content="功能型 FileSaver.js: 通过创建blob对象在前端另存为 jsPDF: 前端专业生成PDF FileAPI：各种（文本，图片）文件多方式（批量，拖拽）上传 qrcodejs：二维码生成器 dayjs: 日期格式化，moment的light版 clipboard.js: 拷贝到剪切板 js-xlsx：前端保存为excel1var workbook = XLSX.utils.table_t">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2020-04-18T12:59:05.435Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="开发工具库">
+<meta name="twitter:description" content="功能型 FileSaver.js: 通过创建blob对象在前端另存为 jsPDF: 前端专业生成PDF FileAPI：各种（文本，图片）文件多方式（批量，拖拽）上传 qrcodejs：二维码生成器 dayjs: 日期格式化，moment的light版 clipboard.js: 拷贝到剪切板 js-xlsx：前端保存为excel1var workbook = XLSX.utils.table_t">
+
+  
+
+  
+    <link rel="icon" href="//assets-cdn.github.com/favicon.ico">
+  
+
+  <link href="/css/styles.css?v=c114cbe6" rel="stylesheet">
+
+
+  
+    <link rel="stylesheet" href="/css/style.css">
+  
+
+  
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-39656503-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+  
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?1e5d8068abdfb22e27ebe052a4feae14";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+  
+  <script type="text/javascript">
+	(function(){
+	    var bp = document.createElement('script');
+	    var curProtocol = window.location.protocol.split(':')[0];
+	    if (curProtocol === 'https') {
+	        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+	    }
+	    else {
+	        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+	    }
+	    var s = document.getElementsByTagName("script")[0];
+	    s.parentNode.insertBefore(bp, s);
+	})();
+  </script>
+
+
+
+  
+    <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+
+  
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+  
+</head>
+</html>
+<body>
+
+
+  
+    <span id="toolbox-mobile" class="toolbox-mobile">更多</span>
+  
+
+  <div class="post-header CENTER">
+   
+  <div class="toolbox">
+    <a class="toolbox-entry" href="/">
+      <span class="toolbox-entry-text">更多</span>
+      <i class="icon-angle-down"></i>
+      <i class="icon-home"></i>
+    </a>
+    <ul class="list-toolbox">
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/archives/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            博客
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/category/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            分类
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/tag/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            标签
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/link/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            友链
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/about/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            关于
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/atom.xml"
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+            RSS
+          </a>
+        </li>
+      
+        <li class="item-toolbox">
+          <a
+            class="CIRCLE"
+            href="/search/"
+            rel="noopener noreferrer"
+            target="_self"
+            >
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+
+</div>
+
+
+  <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#功能型"><span class="toc-text">功能型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#事件封装"><span class="toc-text">事件封装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#小组件"><span class="toc-text">小组件</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#可视化搭建"><span class="toc-text">可视化搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#snippet"><span class="toc-text">snippet</span></a></li></ol>
+  </div>
+
+
+
+<div class="content content-post CENTER">
+   <article id="post-开发工具库" class="article article-type-post" itemprop="blogPost">
+  <header class="article-header">
+    <h1 class="post-title">开发工具库</h1>
+
+    <div class="article-meta">
+      <span>
+        <i class="icon-calendar"></i>
+        <span>2019.10.04</span>
+      </span>
+
+      
+        <span class="article-author">
+          <i class="icon-user"></i>
+          <span>Vincent Hou</span>
+        </span>
+      
+
+      
+
+
+      
+        <span>
+          <i class="icon-comment"></i>
+          <a href="http://vincenthou.github.io/2019/10/04/开发工具库/#disqus_thread"></a>
+        </span>
+      
+
+      
+      <i class="fa fa-eye"></i> 
+        <span id="busuanzi_container_page_pv">
+           &nbsp热度 <span id="busuanzi_value_page_pv">
+           <i class="fa fa-spinner fa-spin"></i></span>℃
+        </span>
+      
+
+      
+      
+    </div>
+  </header>
+
+  <div class="article-content">
+    
+      <h1 id="功能型"><a href="#功能型" class="headerlink" title="功能型"></a>功能型</h1><ul>
+<li><a href="https://github.com/eligrey/FileSaver.js" target="_blank" rel="noopener">FileSaver.js</a>: 通过创建blob对象在前端另存为</li>
+<li><a href="https://github.com/MrRio/jsPDF" target="_blank" rel="noopener">jsPDF</a>: 前端专业生成PDF</li>
+<li><a href="https://github.com/mailru/FileAPI" target="_blank" rel="noopener">FileAPI</a>：各种（文本，图片）文件多方式（批量，拖拽）上传</li>
+<li><a href="https://github.com/davidshimjs/qrcodejs" target="_blank" rel="noopener">qrcodejs</a>：二维码生成器</li>
+<li><a href="https://github.com/iamkun/dayjs" target="_blank" rel="noopener">dayjs</a>: 日期格式化，moment的light版</li>
+<li><a href="https://github.com/zenorocha/clipboard.js" target="_blank" rel="noopener">clipboard.js</a>: 拷贝到剪切板</li>
+<li><a href="https://github.com/SheetJS/js-xlsx" target="_blank" rel="noopener">js-xlsx</a>：前端保存为excel<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> workbook = XLSX.utils.table_to_book(<span class="built_in">document</span>.getElementById(<span class="string">'table'</span>));</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="事件封装"><a href="#事件封装" class="headerlink" title="事件封装"></a>事件封装</h1><ul>
+<li><a href="https://github.com/alexgibson/shake.js" target="_blank" rel="noopener">shake.js</a>：摇一摇</li>
+<li><a href="https://github.com/any86/any-touch" target="_blank" rel="noopener">any-touch</a>：移动手势库</li>
+</ul>
+<h1 id="小组件"><a href="#小组件" class="headerlink" title="小组件"></a>小组件</h1><ul>
+<li><a href="https://github.com/nolimits4web/swiper" target="_blank" rel="noopener">swiper</a>：轮播图</li>
+<li><a href="https://github.com/jackmoore/autosize" target="_blank" rel="noopener">autosize</a>：textarea高度根据输入实时自适应</li>
+<li><a href="https://github.com/kimmobrunfeldt/progressbar.js" target="_blank" rel="noopener">progressbar.js</a>：高可定制进度条</li>
+<li><a href="https://github.com/josdejong/jsoneditor" target="_blank" rel="noopener">jsoneditor</a>: json编辑器</li>
+</ul>
+<h1 id="可视化搭建"><a href="#可视化搭建" class="headerlink" title="可视化搭建"></a>可视化搭建</h1><ul>
+<li><a href="https://github.com/yyccmmkk/js-reference-line" target="_blank" rel="noopener">js-reference-line</a>: js 拖动时生成对齐线</li>
+<li><a href="https://github.com/yyccmmkk/js-resize-ui" target="_blank" rel="noopener">js-resize-ui</a>: 对页面元素进行缩放操作，支持按下ctrl 后同比例缩放，及任意缩放</li>
+<li><a href="https://github.com/zinkey/react-cool-layout" target="_blank" rel="noopener">react-cool-layout</a>：定义元素的相对位置关系来自适应布局，布局位置根据相对位置关系动态计算</li>
+</ul>
+<h1 id="snippet"><a href="#snippet" class="headerlink" title="snippet"></a>snippet</h1><ul>
+<li><a href="https://github.com/any86/any-rule" target="_blank" rel="noopener">any-rule</a>: 常用正则表达式</li>
+</ul>
+
+    
+  </div>
+</article>
+
+
+   
+  <div class="text-center donation">
+    <div class="inner-donation">
+      <span class="btn-donation">支持一下</span>
+      <div class="donation-body">
+        <div class="tip text-center">扫一扫，支持vincenthou</div>
+        <ul class="theme.donation.items.length">
+        
+          <li class="item">
+            <img src="//vdemo.qiniudn.com/qr-wechat.png" alt="">
+          </li>
+        
+          <li class="item">
+            <img src="//vdemo.qiniudn.com/qr-alipay.png" alt="">
+          </li>
+        
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+   
+  <div class="box-prev-next clearfix">
+    <a class="show pull-left" href="/2018/08/21/寓教于乐的技术教程/">
+        <i class="icon icon-angle-left"></i>
+    </a>
+    <a class="show pull-right" href="/2019/10/04/通用表单搭建器信息收集/">
+        <i class="icon icon-angle-right"></i>
+    </a>
+  </div>
+
+
+
+
+</div>
+
+
+  <a id="backTop" class="back-top">
+    <i class="icon-angle-up"></i>
+  </a>
+
+
+
+
+  <div class="modal" id="modal">
+  <span id="cover" class="cover hide"></span>
+  <div id="modal-dialog" class="modal-dialog hide-dialog">
+    <div class="modal-header">
+      <span id="close" class="btn-close">关闭</span>
+    </div>
+    <hr>
+    <div class="modal-body">
+      <ul class="list-toolbox">
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/archives/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              博客
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/category/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              分类
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/tag/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              标签
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/link/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              友链
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/about/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              关于
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/atom.xml"
+              rel="noopener noreferrer"
+              target="_blank"
+              >
+              RSS
+            </a>
+          </li>
+        
+          <li class="item-toolbox">
+            <a
+              class="CIRCLE"
+              href="/search/"
+              rel="noopener noreferrer"
+              target="_self"
+              >
+              搜索
+            </a>
+          </li>
+        
+      </ul>
+
+    </div>
+  </div>
+</div>
+
+
+
+  
+      <div class="fexo-comments comments-post">
+    
+  <section class="disqus-comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <script>
+    var disqus_shortname = 'vincenthou';
+    
+    var disqus_url = 'https://vincenthou.github.io/2019/10/04/开发工具库/';
+    
+    (function(){
+      var dsq = document.createElement('script');
+      dsq.type = 'text/javascript';
+      dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  </script>
+
+  <script id="dsq-count-scr" src="//vincenthou.disqus.com/count.js" async></script>
+
+
+
+    
+
+
+
+
+    
+
+    
+	
+  </div>
+
+  
+
+  <script type="text/javascript">
+  function loadScript(url, callback) {
+    var script = document.createElement('script')
+    script.type = 'text/javascript';
+
+    if (script.readyState) { //IE
+      script.onreadystatechange = function() {
+        if (script.readyState == 'loaded' ||
+          script.readyState == 'complete') {
+          script.onreadystatechange = null;
+          callback();
+        }
+      };
+    } else { //Others
+      script.onload = function() {
+        callback();
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName('head')[0].appendChild(script);
+  }
+
+  window.onload = function() {
+    loadScript('/js/bundle.js?235683', function() {
+      // load success
+    });
+  }
+</script>
+
+</body>
+</html>
